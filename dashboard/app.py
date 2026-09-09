@@ -146,10 +146,14 @@ ROLES = {
         # fusiona Directorio y Gerencia General (Seccion 9 del caso), el dashboard se redujo a 3
         # perfiles, Directorio absorbe el nivel "junta directiva / gerencia general" completo en
         # vez de separarse en dos radios distintos
+        # sin "volumen" a proposito, lo temporal ya lo cubre "tendencia" (calificacion por anio),
+        # "volumen" (titulos por anio) le corresponde solo a Marketing, es su unica senal
+        # temporal y su necesidad textual lo pide literal ("evolucion temporal del catalogo").
+        # Directorio y Marketing lo compartian antes, quedaba el mismo grafico en ambos perfiles.
         "necesita": "Indicadores consolidados, tendencias, comparaciones, recomendaciones "
                     "ejecutivas (apoya decisiones de inversión y crecimiento). Visión global "
                     "del catálogo para la planificación estratégica.",
-        "secciones": {"panorama", "scatter", "volumen", "tendencia", "top10", "finanzas"},
+        "secciones": {"panorama", "scatter", "tendencia", "top10", "finanzas"},
     },
     "Marketing": {
         # sin "panorama" a proposito, ese grafico es por CANTIDAD y la necesidad real de
