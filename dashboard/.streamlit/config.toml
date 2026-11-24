@@ -1,0 +1,5 @@
+# Sin tema fijo: Streamlit sigue la apariencia del sistema (claro u oscuro), como pide
+# Apple HIG (Dark Mode). El acento neutro de los controles se define por CSS en app.py,
+# para que el rojo quede reservado al estado "no cumple".
+[browser]
+gatherUsageStats = false
