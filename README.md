@@ -54,7 +54,7 @@ bien evaluadas recuperan su presupuesto el 77% de las veces, frente al 58% de la
 | dashboard | El dashboard interactivo (app.py, hecho con Streamlit y Plotly), el módulo streamview con la carga de datos y la definición de los KPIs, las pruebas y las dependencias |
 | data | Los dos archivos CSV oficiales del caso, sin modificar |
 | docs | El caso semestral |
-| entregables | El informe ejecutivo de la EP5, la presentación de la EP6 y los entregables de etapas anteriores |
+| entregables | Los informes y presentaciones de cada etapa, en las carpetas EP1 y EP2, EP3 y EP4, y EP5 y EP6 |
 | images | Los 17 gráficos que genera el notebook |
 | notebooks | El análisis exploratorio, con la auditoría de calidad de datos, las métricas, los KPIs y las visualizaciones |
 
@@ -158,7 +158,7 @@ líneas se usan solo para mostrar el tiempo y los gráficos de dispersión solo 
 
 ## Entregables
 
-En la carpeta entregables están el informe ejecutivo final de la EP5 y la presentación para la defensa de la EP6,
-en PowerPoint y PDF, con notas para quien presenta. También guardamos los entregables de etapas anteriores (la
-infografía de mercados, los informes EV1 y EP3, y las presentaciones EV1 y EP4) como referencia del antes y el
-después.
+La carpeta entregables está ordenada por etapa del semestre. En EP1 y EP2 están el informe ejecutivo y la
+presentación de la primera etapa. En EP3 y EP4 están el informe ejecutivo de la EP3, la infografía de mercados y la
+presentación de la EP4. En EP5 y EP6 están el informe ejecutivo final de la EP5 y la presentación para la defensa
+de la EP6, en PowerPoint y PDF. Las etapas anteriores se conservan como referencia del antes y el después.
