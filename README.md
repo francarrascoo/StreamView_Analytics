@@ -15,7 +15,7 @@ La observación central de la revisión fue que **confundíamos métricas con KP
 - Definimos **3 KPIs con meta, plazo, umbral de alerta, responsable y decisión** (`dashboard/streamview/kpis.py`), uno
   por cada decisión central del caso: qué cine adquirir (K1), de qué mercados (K2) y cómo medir la participación del
   público en series (K3). El resto del tablero es evidencia o contexto de esos tres KPIs.
-- El dashboard muestra cada KPI con su **estado** (✓ cumple / ! en riesgo / ✕ no cumple), un **gráfico de bala**
+- El dashboard muestra cada KPI con su **estado** escrito (cumple / en riesgo / no cumple), un **gráfico de bala**
   contra la meta, la **trayectoria** por año y las **decisiones** que gatilla.
 - Agregamos el perfil **Contenidos y Adquisición**, las preguntas del caso que faltaban (directores y actores), la
   vista de **participación** para Marketing (series populares sin votos suficientes) y la **rentabilidad** como
@@ -35,9 +35,9 @@ queda más abajo.
 
 | KPI | Fórmula | Línea base | Meta | Estado | Responsable |
 |---|---|---|---|---|---|
-| K1 Películas bien evaluadas | películas con calificación ≥ 7 / películas con 10+ votos | 25,8% | ≥ 30% | ! En riesgo | Contenidos y Adquisición |
-| K2 Películas de mercados de alto desempeño | películas de Japón, Corea del Sur o México / películas con país | 13,5% | ≥ 18% | ✕ No cumple | Contenidos y Adquisición |
-| K3 Series que el público califica | series con 10+ votos / series | 38,4% | ≥ 50% | ✕ No cumple | Producto (con Marketing) |
+| K1 Películas bien evaluadas | películas con calificación ≥ 7 / películas con 10+ votos | 25,8% | ≥ 30% | En riesgo | Contenidos y Adquisición |
+| K2 Películas de mercados de alto desempeño | películas de Japón, Corea del Sur o México / películas con país | 13,5% | ≥ 18% | No cumple | Contenidos y Adquisición |
+| K3 Series que el público califica | series con 10+ votos / series | 38,4% | ≥ 50% | No cumple | Producto (con Marketing) |
 
 Las cifras descriptivas (total de títulos, países, idiomas, presupuesto total, etc.) se presentan como
 **métricas de contexto**: no tienen meta, así que no son KPIs. La rentabilidad (63,6% de las películas recupera
@@ -161,7 +161,7 @@ una frase arriba dice la conclusión; cada pregunta va en su tarjeta con un solo
 cifras; barras para comparar magnitudes y nada en 3D; y las mismas escalas y colores en todas las pantallas.
 Además aplica las *Human Interface Guidelines* de Apple: sigue la apariencia del sistema (modo claro u oscuro),
 usa la fuente del sistema, controles segmentados para elegir vista y orden, un resumen en texto de cada gráfico
-para lectores de pantalla, y nunca distingue solo por color (✓ en lo que supera la meta, rayado en las series).
+para lectores de pantalla, y nunca distingue solo por color (el estado va escrito, la raya de la meta marca lo que la supera y las series van rayadas).
 
 Arriba, un control segmentado de vista adapta pestañas, KPIs y nivel de detalle al público:
 
@@ -173,7 +173,7 @@ Arriba, un control segmentado de vista adapta pestañas, KPIs y nivel de detalle
 | Data & Analytics (técnico) | ¿Las cifras son confiables? | KPIs y calidad de datos · Catálogo · Popularidad y nota · Tendencia · Finanzas | K1, K2, K3 + ficha técnica |
 
 - **Frase principal:** arriba a la izquierda, la conclusión de la vista, recalculada con los filtros.
-- **Tarjetas de KPI:** valor, estado (ícono + texto + color), meta y puntos que faltan, con un gráfico de bala
+- **Tarjetas de KPI:** valor, estado (texto + color), meta y puntos que faltan, con un gráfico de bala
   (barra = valor, raya vertical = meta, tramos grises = no cumple / en riesgo / cumple). Al pasar el mouse se ven
   la fórmula y el responsable.
 - **Una tarjeta por pregunta:** la pregunta en gris, la respuesta como título y un solo gráfico o tabla.
@@ -184,8 +184,8 @@ Arriba, un control segmentado de vista adapta pestañas, KPIs y nivel de detalle
   recortar los rankings por país. K2 no se evalúa con filtro de país (mide justamente la mezcla de países) y el
   dashboard lo explica. Un botón reinicia los filtros.
 - **Mismas escalas y colores en todas las pantallas:** todo porcentaje va de 0 a 100%; azul = película,
-  naranjo rayado = serie, verde con ✓ = supera la meta, gris = contexto, tinta = énfasis (EE.UU.); verde, ámbar y
-  rojo con ícono solo para el estado de un KPI. Barras para comparar magnitudes, líneas solo para el tiempo y
+  naranjo rayado = serie, verde = supera la meta (a la derecha de la raya), gris = contexto, tinta = énfasis (EE.UU.); verde, ámbar y
+  rojo, siempre con texto, solo para el estado de un KPI. Barras para comparar magnitudes, líneas solo para el tiempo y
   dispersión solo para relaciones (vista técnica).
 
 ## Entregables

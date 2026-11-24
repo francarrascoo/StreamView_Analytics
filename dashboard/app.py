@@ -15,14 +15,14 @@ Reglas de diseño (Storytelling with Data, C. Nussbaumer Knaflic, y reglas del e
    dispersión solo para relaciones; nada en 3D, sin tortas, treemaps ni áreas.
 7. Mismas escalas y colores en todas las pantallas: todo porcentaje va de 0 a 100%;
    azul = película, naranjo = serie, verde = supera la meta, gris = contexto,
-   tinta = énfasis neutro; verde/ámbar/rojo con ícono solo para el estado de un KPI.
+   tinta = énfasis neutro; verde/ámbar/rojo, siempre con texto, solo para el estado de un KPI.
 
 Apple Human Interface Guidelines (aplicadas en EP5)
 ---------------------------------------------------
 - Dark Mode: el tablero sigue la apariencia del sistema (claro u oscuro), sin un ajuste
   propio; cada color tiene variante clara y oscura con contraste AA (texto chico ~7:1).
 - Color: un color, un significado; el acento de los controles es neutro (no compite con
-  el rojo de "no cumple"); nunca solo color: ícono, texto, forma o patrón rayado (series).
+  el rojo de "no cumple"); nunca solo color: texto, posición frente a la meta o patrón rayado (series).
 - Charts: ejes fijos de 0 a 100% cuando el rango tiene sentido; marcas de eje conocidas;
   título que resume el mensaje; resumen en texto de cada gráfico para lectores de pantalla.
 - Segmented controls: para elegir vista, orden y formato (opciones cercanas, con estado
@@ -362,15 +362,15 @@ def kpi_card(k, r):
     return (f'<div class="kpi" title="{k.formula}. Responsable: {k.responsable}.">'
             f'<div class="kpi-name">{k.id} · {k.nombre}</div>'
             f'<div class="kpi-row"><span class="kpi-val">{fmt_kpi(k, r.valor)}</span>'
-            f'<span class="badge" style="color:{color};border-color:{color}">{est["icono"]} {est["texto"]}</span></div>'
+            f'<span class="badge" style="color:{color};border-color:{color}">{est["texto"]}</span></div>'
             f'{bullet_html(k, r.valor)}<div class="kpi-meta">{pie}</div></div>')
 
 
 def fila_kpis(ids):
     res = resultados(ids)
     st.markdown('<div class="kpi-grid">' + "".join(kpi_card(k, r) for k, r in res) + "</div>"
-                f'<div class="leyenda">KPI: indicador con meta, plazo y responsable · ✓ cumple · ! en riesgo '
-                f'(hasta 15% bajo la meta) · ✕ no cumple · la raya vertical es la meta a {PLAZO.lower()}</div>',
+                f'<div class="leyenda">KPI: indicador con meta, plazo y responsable · cumple · en riesgo '
+                f'(hasta 15% bajo la meta) · no cumple · la raya vertical es la meta a {PLAZO.lower()}</div>',
                 unsafe_allow_html=True)
 
 
@@ -473,9 +473,9 @@ def card_decisiones(ids):
     res = [(k, r) for k, r in resultados(ids) if r.estado in (NO_CUMPLE, RIESGO)]
     with tarjeta("¿Qué hacer ahora?", "Cada KPI bajo su meta tiene un responsable y una acción"):
         if not res:
-            st.markdown("✓ Todos los KPIs de esta vista cumplen su meta en este segmento.")
+            st.markdown("Todos los KPIs de esta vista cumplen su meta en este segmento.")
             return
-        items = "".join(f'<li><b>{k.id} {ESTADOS[r.estado]["icono"]} {k.responsable}:</b> {k.accion}</li>'
+        items = "".join(f'<li><b>{k.id} ({ESTADOS[r.estado]["texto"].lower()}) · {k.responsable}:</b> {k.accion}</li>'
                         for k, r in res)
         st.markdown(f'<ol class="decision" style="padding-left:1.1rem;margin:0">{items}</ol>', unsafe_allow_html=True)
 
@@ -494,18 +494,18 @@ def card_k1_paises():
         titulo = f"Solo {lista_es(sobre)} superan la meta de 30%; EE.UU. queda en {pct(mk.loc[US, 'bien'])}"
     else:
         titulo = f"{len(sobre)} países superan la meta de 30%"
-    with tarjeta(pregunta, titulo, "Películas bien evaluadas (nota 7 o más) por país · verde y ✓: supera la meta · "
-                                   "★ mercados del KPI K2"):
+    with tarjeta(pregunta, titulo, "Películas bien evaluadas (nota 7 o más) por país · verde: supera la meta · "
+                                   "(K2): mercados del KPI K2"):
         datos = mk.head(9)
         extra = [c for c in mk.index if (c == US or c in SEL_PAISES) and c not in datos.index]
         if extra:
             datos = pd.concat([datos, mk.loc[extra]])
         colores = [VERDE if v >= k.meta else INK if c == US else GRIS for c, v in zip(datos.index, datos["bien"])]
         etiquetas = [(f"<b>{nombre_pais(c)}</b>" if c in SEL_PAISES else nombre_pais(c))
-                     + (" ★" if c in MERCADOS_PRIORITARIOS else "") for c in datos.index]
+                     + (" (K2)" if c in MERCADOS_PRIORITARIOS else "") for c in datos.index]
         barras(etiquetas, list(datos["bien"]), colores, pct, meta=k.meta, meta_txt="meta 30%",
-               textos=[f"{pct(v)} ✓" if v >= k.meta else pct(v) for v in datos["bien"]],
-               que="películas bien evaluadas por país, de 0 a 100%; ✓ supera la meta")
+               textos=[pct(v) for v in datos["bien"]],
+               que="películas bien evaluadas por país, de 0 a 100%; en verde, los que superan la meta")
 
 
 def card_k1_generos():
@@ -518,11 +518,11 @@ def card_k1_generos():
     cumplen = [nombre_genero(g) for g in r.index if r.loc[g, "bien"] >= k.meta]
     with tarjeta(pregunta, f"{len(cumplen)} de {len(r)} géneros superan la meta; {lista_es(cumplen[:3])} lideran y "
                            f"{nombre_genero(r.index[-1])} queda último",
-                 "Películas bien evaluadas (nota 7 o más) por género · verde y ✓: supera la meta"):
+                 "Películas bien evaluadas (nota 7 o más) por género · verde: supera la meta"):
         barras([nombre_genero(g) for g in r.index], list(r["bien"]), [VERDE if v >= k.meta else GRIS for v in r["bien"]],
                pct, meta=k.meta, meta_txt="meta 30%", alto=min(470, 22 * len(r) + 40),
-               textos=[f"{pct(v)} ✓" if v >= k.meta else pct(v) for v in r["bien"]],
-               que="películas bien evaluadas por género, de 0 a 100%; ✓ supera la meta")
+               textos=[pct(v) for v in r["bien"]],
+               que="películas bien evaluadas por género, de 0 a 100%; en verde, los que superan la meta")
 
 
 def card_trayectoria(kid, compacto=False):
@@ -652,11 +652,11 @@ def card_k3_generos():
     bajos = [nombre_genero(x) for x in g.index[:3]]
     cumplen = int((g["k3"] >= k.meta).sum())
     with tarjeta(pregunta, f"{lista_es(bajos)}, los más bajos; {cumplen} de {len(g)} géneros cumplen",
-                 "Series con 10 o más votos por género · verde y ✓: supera la meta de K3"):
+                 "Series con 10 o más votos por género · verde: supera la meta de K3"):
         barras([nombre_genero(x) for x in g.index], list(g["k3"]), [VERDE if v >= k.meta else GRIS for v in g["k3"]],
                pct, meta=k.meta, meta_txt="meta 50%", alto=min(330, 19 * len(g) + 30),
-               textos=[f"{pct(v)} ✓" if v >= k.meta else pct(v) for v in g["k3"]],
-               que="series con 10 o más votos por género, de 0 a 100%; ✓ supera la meta")
+               textos=[pct(v) for v in g["k3"]],
+               que="series con 10 o más votos por género, de 0 a 100%; en verde, los que superan la meta")
 
 
 def card_series_sin_votos():
@@ -721,15 +721,15 @@ def card_rentabilidad_mercado():
     if len(fin) < 50:
         return sin_datos(pregunta, "Sin películas suficientes con datos financieros en este segmento")
     prior = frozenset(MERCADOS_PRIORITARIOS)
-    grupo = fin["country_set"].apply(lambda c: "Japón, Corea del Sur y México ★" if not c.isdisjoint(prior)
+    grupo = fin["country_set"].apply(lambda c: "Japón, Corea del Sur y México (K2)" if not c.isdisjoint(prior)
                                      else "EE.UU." if US in c else "Otros países")
     r = fin.groupby(grupo)["roi"].agg(recupera=lambda v: (v >= 1).mean(), n="size")
-    r = r.reindex([g for g in ["Japón, Corea del Sur y México ★", "EE.UU.", "Otros países"] if g in r.index])
-    pri = "Japón, Corea del Sur y México ★"
+    r = r.reindex([g for g in ["Japón, Corea del Sur y México (K2)", "EE.UU.", "Otros países"] if g in r.index])
+    pri = "Japón, Corea del Sur y México (K2)"
     titulo = (f"Comprar en estos mercados no sacrifica rentabilidad: {pct(r.loc[pri, 'recupera'])} recupera su "
               f"presupuesto, frente a {pct(r.loc['EE.UU.', 'recupera'])} en EE.UU." if pri in r.index and "EE.UU." in r.index
               else "Películas que recuperan su presupuesto por mercado")
-    with tarjeta(pregunta, titulo, "Películas que recuperan su presupuesto, por origen · ★ mercados del KPI K2 · "
+    with tarjeta(pregunta, titulo, "Películas que recuperan su presupuesto, por origen · (K2): mercados del KPI K2 · "
                                    f"diferencia pequeña y con solo {miles(r.loc[pri, 'n']) if pri in r.index else 0} películas "
                                    "de estos mercados: muestra que no rinden menos, no que rindan más"):
         barras(list(r.index), list(r["recupera"]), [INK if g == pri else GRIS for g in r.index], pct, alto=160,

@@ -26,10 +26,10 @@ FRECUENCIA = "Trimestral, sobre cada nueva extracción del catálogo"
 
 CUMPLE, RIESGO, NO_CUMPLE, SIN_DATOS = "cumple", "riesgo", "no_cumple", "sin_datos"
 ESTADOS = {
-    CUMPLE: {"icono": "✓", "texto": "Cumple"},
-    RIESGO: {"icono": "!", "texto": "En riesgo"},
-    NO_CUMPLE: {"icono": "✕", "texto": "No cumple"},
-    SIN_DATOS: {"icono": "–", "texto": "Sin datos suficientes"},
+    CUMPLE: {"texto": "Cumple"},
+    RIESGO: {"texto": "En riesgo"},
+    NO_CUMPLE: {"texto": "No cumple"},
+    SIN_DATOS: {"texto": "Sin datos suficientes"},
 }
 TOLERANCIA = 0.15  # "en riesgo" = hasta 15% bajo la meta
 MIN_BASE = 30  # títulos mínimos en la base para evaluar un KPI en un segmento
