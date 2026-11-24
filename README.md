@@ -1,143 +1,199 @@
-# StreamView Analytics — EV2
+# StreamView Analytics · Visual Analytics del catálogo (EP5)
 
-Solución de Visual Analytics para el catálogo audiovisual de StreamView Analytics. Proyecto de la
-asignatura ADY1104 (Visualización de Datos), Etapa 3 (evaluación crítica y rediseño) y presentación
-ejecutiva con defensa técnica.
+Solución de visualización para StreamView Analytics, plataforma de streaming que necesita decidir **qué contenido
+adquirir, qué promover y dónde invertir** a partir de su catálogo de películas y series. Proyecto de ADY1104
+Visualización de Datos (Duoc UC). Esta versión corresponde a la **EP5: revisión crítica y optimización** de la
+solución desarrollada durante el semestre, y es la misma que se defiende en la EP6.
 
-## Equipo
+**Equipo:** Felipe Ahumada Silva · Francisca Carrasco Lozano
 
-- Felipe Ahumada Silva
-- Francisca Carrasco Lozano
+## Qué cambió en EP5
 
-## Contexto
+La observación central de la revisión fue que **confundíamos métricas con KPIs**: el dashboard mostraba cifras
+("26% bien evaluadas", "Japón", "1,9×") sin una meta contra la cual juzgarlas. En EP5:
 
-StreamView Analytics es una plataforma de streaming digital que necesita transformar el volumen de
-datos de su catálogo en conocimiento accionable para distintas áreas de la organización (Directorio,
-Marketing, Data & Analytics, entre otras). Este proyecto analiza dos datasets del catálogo (películas
-y series), identifica hallazgos relevantes y los comunica mediante un notebook de análisis
-exploratorio, un dashboard interactivo con una vista por público, una infografía, un informe
-ejecutivo y una presentación.
+- Definimos **3 KPIs con meta, plazo, umbral de alerta, responsable y decisión** (`dashboard/streamview/kpis.py`), uno
+  por cada decisión central del caso: qué cine adquirir (K1), de qué mercados (K2) y cómo medir la participación del
+  público en series (K3). El resto del tablero es evidencia o contexto de esos tres KPIs.
+- El dashboard muestra cada KPI con su **estado** (✓ cumple / ! en riesgo / ✕ no cumple), un **gráfico de bala**
+  contra la meta, la **trayectoria** por año y las **decisiones** que gatilla.
+- Agregamos el perfil **Contenidos y Adquisición**, las preguntas del caso que faltaban (directores y actores), la
+  vista de **participación** para Marketing (series populares sin votos suficientes) y la **rentabilidad** como
+  evidencia de que invertir en calidad (K1) y en esos mercados (K2) rinde.
+- Corregimos contraste, tipografía, unidades y el uso exclusivo del color.
 
-En esta etapa revisamos la solución de la Etapa 1, volvimos a calcular cada cifra publicada y
-rediseñamos la comunicación según la audiencia. La revisión corrigió cuatro hallazgos que no
-resistieron (entre ellos el central de la Etapa 1, "la popularidad no depende de la calificación"),
-porque los títulos sin votos se promediaban como nota 0 y algunas comparaciones mezclaban películas
-con series.
+El detalle de los 43 cambios, con el problema, la mejora, el fundamento y la evidencia, está en
+[`entregables/evidencias/registro_cambios.md`](entregables/evidencias/registro_cambios.md).
 
-El hallazgo central del proyecto es ahora que **StreamView debería priorizar películas de Japón,
-Corea del Sur y México**: el 49% de las películas del catálogo son de EE.UU., pero esos tres mercados,
-que aportan solo el 13%, tienen la mayor proporción de películas bien evaluadas (5 de cada 10 en
-Japón, frente a 2 de cada 10 en EE.UU.). La ventaja se mantiene con tres métodos distintos
-(comparación directa, mismo género y año, y promedio bayesiano con controles) y se limita a
-películas, porque en series no hay una diferencia consistente. La evidencia se desarrolla en la
-Sección 4.11 del notebook, la infografía, el informe ejecutivo y la presentación.
+## KPIs
 
-## Estructura del proyecto
+Metas a **diciembre de 2026**, medidas trimestralmente sobre cada extracción del catálogo. Son supuestos del caso
+definidos por el equipo a partir de la línea base y de cohortes de estreno que ya las alcanzaron
+(K1 en 2019-2021, K2 en 2020) o están a punto de hacerlo (K3: 49,7% en 2024).
+Estado: **cumple** si alcanza la meta; **en riesgo** si queda hasta 15% (relativo) bajo la meta; **no cumple** si
+queda más abajo.
+
+| KPI | Fórmula | Línea base | Meta | Estado | Responsable |
+|---|---|---|---|---|---|
+| K1 Películas bien evaluadas | películas con calificación ≥ 7 / películas con 10+ votos | 25,8% | ≥ 30% | ! En riesgo | Contenidos y Adquisición |
+| K2 Películas de mercados de alto desempeño | películas de Japón, Corea del Sur o México / películas con país | 13,5% | ≥ 18% | ✕ No cumple | Contenidos y Adquisición |
+| K3 Series que el público califica | series con 10+ votos / series | 38,4% | ≥ 50% | ✕ No cumple | Producto (con Marketing) |
+
+Las cifras descriptivas (total de títulos, países, idiomas, presupuesto total, etc.) se presentan como
+**métricas de contexto**: no tienen meta, así que no son KPIs. La rentabilidad (63,6% de las películas recupera
+su presupuesto) tampoco es un KPI: solo 21,7% de las películas tiene datos financieros confiables. Se usa como
+evidencia: las bien evaluadas recuperan su presupuesto el 77% de las veces y las demás el 58%.
+
+## Estructura del repositorio
 
 ```text
-EV2/
-├── data/           dos CSV originales sin modificar (Netflix Movies / TV Shows Detailed up to 2025)
-├── notebooks/      analisis_exploratorio.ipynb, el análisis exploratorio revisado en la Etapa 3 (17 visualizaciones)
-├── images/         los 17 PNG que genera el notebook al ejecutarse
-├── dashboard/      app.py, el dashboard interactivo por perfil (Streamlit + Plotly), y requirements.txt
-├── entregables/    infografía, informe ejecutivo y presentación de la Etapa 3, y entregables de la Etapa 1
-└── docs/           documentación del caso semestral
+StreamView_Analytics/
+├── README.md
+├── dashboard/
+│   ├── app.py                dashboard interactivo (Streamlit + Plotly)
+│   ├── requirements.txt      dependencias del proyecto
+│   ├── streamview/
+│   │   ├── datos.py          carga, limpieza e integración (fuente única para dashboard y notebook)
+│   │   └── kpis.py           definición de los 3 KPIs: fórmula, meta, alerta, responsable, decisión
+│   └── tests/
+│       └── test_kpis.py      verificación técnica: KPIs consistentes con los datos
+├── data/                     los dos CSV oficiales del caso, sin modificar
+├── docs/                     caso semestral y guía de defensa EP6
+├── entregables/
+│   ├── Informe_Ejecutivo_EP5_StreamView_Analytics.pdf
+│   ├── Presentacion_EP6_StreamView_Analytics.pptx / .pdf
+│   ├── evidencias/
+│   │   ├── registro_cambios.md   43 cambios: problema, mejora, fundamento, resultado, evidencia
+│   │   ├── antes/            capturas de la versión EP4 (commit 221f72f)
+│   │   ├── despues/          capturas de la versión EP5 (modo claro)
+│   │   ├── despues_oscuro/   capturas de la versión EP5 en modo oscuro
+│   │   ├── comparativas/     antes/después lado a lado
+│   │   ├── escenarios/       5 escenarios con filtros activos
+│   │   └── figuras/          figuras del informe
+│   ├── fuente/               fuente del informe y la presentación, y scripts que regeneran evidencias y PDF
+│   └── (entregables de etapas anteriores: EV1, EP3, EP4)
+├── images/                   los 17 PNG que genera el notebook
+└── notebooks/
+    └── analisis_exploratorio.ipynb   auditoría de calidad, métricas, KPIs y 17 visualizaciones
 ```
 
-## Datos
+## Fuentes de datos
 
-- `netflix_movies_detailed_up_to_2025.csv`, 16.000 películas, 18 columnas.
-- `netflix_tv_shows_detailed_up_to_2025.csv`, 16.000 filas antes de depuración (15.991 series únicas
-  tras eliminar 9 duplicados por `show_id`), 16 columnas.
+Los dos datasets oficiales del caso, en `data/` y sin modificar:
 
-Ambos comparten variables como título, país, idioma, año de estreno, géneros, popularidad, cantidad
-de votos y calificación promedio, y se integran en una sola tabla de 31.991 títulos con una columna
-que indica si cada uno es película o serie. Para que la unión sea consistente se separan las
-categorías combinadas de series (`Action & Adventure` pasa a `Action` y `Adventure`), `War & Politics`
-se funde en `War`, `Unknown` se trata como dato faltante y los dos códigos del chino mandarín se
-unifican (82 idiomas en total). `budget` y `revenue` solo existen en el dataset de películas.
+- `netflix_movies_detailed_up_to_2025.csv`: 16.000 películas, 18 columnas.
+- `netflix_tv_shows_detailed_up_to_2025.csv`: 16.000 filas, 16 columnas (15.991 series únicas: 9 duplicados por
+  `show_id`).
 
-Tres reglas de calidad cambian los resultados y se aplican en todo el proyecto:
+Ambos son metadatos de TMDB (popularidad, votos, calificación, presupuesto, ingresos) del catálogo de StreamView,
+estrenos 2010-2025. Se integran en una tabla de 31.991 títulos con una columna de formato (película o serie).
+**No contienen reproducciones, suscripciones ni datos de usuarios**, así que la retención no se puede medir: el
+engagement se aproxima con la participación del público en TMDB (K3).
 
-1. **Calificación solo con 10 o más votos.** 4.560 títulos (14%) no tienen votos y su calificación
-   viene en 0, que no es una nota real. Cubre al 89% de las películas y al 38% de las series.
-2. **Comparar países, idiomas y géneros dentro de un mismo formato.** Las series tienen el triple de
-   popularidad típica que las películas (36,2 frente a 10,9); mezclarlas premia a los segmentos con
-   más series (paradoja de Simpson).
-3. **Finanzas solo con montos de al menos US$10.000 y retorno de hasta 50 veces.** Hay presupuestos
-   de US$1 o US$5. Quedan 3.468 películas (21,7%) con datos confiables y ninguna serie.
+Reglas de calidad aplicadas en todo el proyecto (detalle en la Sección 2 del notebook):
 
-Además, la popularidad se resume con la mediana (tiene valores extremos), las categorías necesitan al
-menos 200 títulos para entrar a un ranking, y 2025 queda fuera de las tendencias porque menos del 10%
-de sus títulos tiene votos suficientes. El detalle de la auditoría de calidad de datos está en la
-Sección 2 del notebook.
+1. **Calificación solo con 10 o más votos.** El 14% de los títulos no tiene votos y su calificación viene en 0.
+2. **Comparar países, idiomas y géneros dentro de un mismo formato.** Las series tienen el triple de popularidad
+   típica que las películas; mezclarlas produce una paradoja de Simpson.
+3. **Finanzas solo con montos ≥ US$10.000 y retorno ≤ 50 veces.** Hay presupuestos de US$1. Quedan 3.468
+   películas (21,7%); por eso la rentabilidad se presenta como evidencia y no como KPI.
+4. **Popularidad con mediana** (valores extremos); categorías con al menos 200 títulos para entrar a un ranking;
+   2025 fuera de las tendencias (menos del 10% de sus títulos tiene votos suficientes).
 
 ## Cómo ejecutar
 
-### Notebook de análisis exploratorio
+Requiere Python 3.9 o superior. Desde la raíz del repositorio:
 
-Es el análisis de la Etapa 1 revisado en la Etapa 3: auditoría de calidad de datos (Sección 2), KPIs
-(Sección 3), 17 visualizaciones con títulos corregidos (Sección 4) y un resumen final con los
-hallazgos verificados y las correcciones respecto de la Etapa 1 (Sección 5). Requiere `pandas` y
-`matplotlib`.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate          # en Windows: .venv\Scripts\activate
+pip install -r dashboard/requirements.txt
+```
+
+### Dashboard
+
+```bash
+streamlit run dashboard/app.py
+```
+
+Queda disponible en `http://localhost:8501`. También funciona con `cd dashboard && streamlit run app.py`. Solo
+necesita `streamlit`, `pandas` y `plotly`; el resto de `dashboard/requirements.txt` es para el notebook y para
+regenerar evidencias.
+
+### Verificación técnica
+
+```bash
+python dashboard/tests/test_kpis.py
+```
+
+Comprueba que el catálogo integrado tenga 31.991 títulos, que cada línea base declarada coincida con los datos,
+que meta y alerta sean coherentes, que los estados se asignen bien y que los filtros recalculen los KPIs.
+
+### Notebook
 
 ```bash
 cd notebooks
 jupyter notebook analisis_exploratorio.ipynb
+# o, para regenerar todas las salidas y los 17 PNG de images/:
+python -m nbconvert --to notebook --execute --inplace analisis_exploratorio.ipynb
 ```
 
-Para regenerar todas las salidas y los 17 PNG de `images/` desde cero:
+### Regenerar las evidencias antes/después
+
+Con el dashboard corriendo en `http://localhost:8501` y Google Chrome instalado:
 
 ```bash
-python3 -m nbconvert --to notebook --execute --inplace analisis_exploratorio.ipynb
+cd entregables/fuente
+python capturar_evidencias.py --url http://localhost:8501 --salida ../evidencias/despues
+python capturar_escenarios.py --url http://localhost:8501 --salida ../evidencias/escenarios
+python capturar_figuras.py --url http://localhost:8501 --salida ../evidencias/figuras
+python comparativas.py
 ```
 
-### Dashboard interactivo
+Para las capturas del "antes", se ejecuta lo mismo sobre la versión EP4 (`git checkout 221f72f -- dashboard/app.py`
+en una copia del repositorio) con `--salida ../evidencias/antes`.
 
-```bash
-cd dashboard
-pip install -r requirements.txt
-streamlit run app.py
-```
+## Funcionamiento del dashboard
 
-Queda disponible en `http://localhost:8501`. Requiere `streamlit>=1.51`, `pandas>=2.0` y
-`plotly>=5.20`.
+Diseñado con los principios de *Storytelling with Data* (C. Nussbaumer Knaflic) y siete reglas: todo se lee de
+un vistazo y sin scroll (cada pestaña cabe en una pantalla de 1440 × 900); lo importante va arriba a la izquierda;
+una frase arriba dice la conclusión; cada pregunta va en su tarjeta con un solo gráfico; sin jerga y con pocas
+cifras; barras para comparar magnitudes y nada en 3D; y las mismas escalas y colores en todas las pantallas.
+Además aplica las *Human Interface Guidelines* de Apple: sigue la apariencia del sistema (modo claro u oscuro),
+usa la fuente del sistema, controles segmentados para elegir vista y orden, un resumen en texto de cada gráfico
+para lectores de pantalla, y nunca distingue solo por color (✓ en lo que supera la meta, rayado en las series).
 
-Carga los CSV directo desde `data/` y aplica la misma limpieza de datos que el notebook, de modo que
-los dos productos entregan las mismas cifras. Un selector de perfil cambia las pestañas, los
-gráficos, los KPIs y el nivel de detalle según el público:
+Arriba, un control segmentado de vista adapta pestañas, KPIs y nivel de detalle al público:
 
-| Perfil | Tipo de vista | Pestañas |
-| --- | --- | --- |
-| Directorio | Explicativa: la respuesta en una pantalla | Resumen, Catálogo, Finanzas |
-| Marketing | Explicativa con exploración guiada | Oportunidades, Títulos destacados, Catálogo |
-| Data & Analytics | Exploratoria: cobertura, tamaño de muestra y vistas técnicas (dispersión, treemap, áreas) | Catálogo, Popularidad y calidad, Finanzas |
+| Perfil | Pregunta que responde | Pestañas | KPIs |
+|---|---|---|---|
+| Directorio (ejecutivo) | ¿Cumplimos las metas y dónde invertir? | Resumen · Avance hacia la meta · Catálogo · Rentabilidad | K1, K2, K3 |
+| Contenidos y Adquisición (analítico) | ¿Qué mercados y géneros adquirir? | Mercados · Géneros · Directores y actores | K1, K2 |
+| Marketing | ¿Cómo aumentar la participación del público y qué destacar? | Participación · Qué promover · Segmentos | K3 |
+| Data & Analytics (técnico) | ¿Las cifras son confiables? | KPIs y calidad de datos · Catálogo · Popularidad y nota · Tendencia · Finanzas | K1, K2, K3 + ficha técnica |
 
-Cada vista abre con la pregunta que responde, y cada gráfico lleva un título que dice la conclusión,
-recalculado con los datos filtrados. El mensaje va en color y el contexto en gris; azul identifica a
-las películas y naranjo a las series en todo el proyecto.
-
-Los filtros por tipo, rango de años, país, idioma y género recalculan todos los KPIs, gráficos y
-títulos, y un botón los reinicia. El filtro de país destaca en vez de recortar: los rankings por país
-siguen comparando contra todos los países y muestran en qué puesto quedó cada uno de los
-seleccionados. El mínimo de títulos por categoría baja en proporción a los filtros sin quedar bajo
-30, y el dashboard avisa cuando una combinación no tiene datos suficientes en vez de mostrar un
-ranking engañoso.
+- **Frase principal:** arriba a la izquierda, la conclusión de la vista, recalculada con los filtros.
+- **Tarjetas de KPI:** valor, estado (ícono + texto + color), meta y puntos que faltan, con un gráfico de bala
+  (barra = valor, raya vertical = meta, tramos grises = no cumple / en riesgo / cumple). Al pasar el mouse se ven
+  la fórmula y el responsable.
+- **Una tarjeta por pregunta:** la pregunta en gris, la respuesta como título y un solo gráfico o tabla.
+- **¿Qué hacer ahora?:** por cada KPI fuera de meta, el responsable y la acción acordada.
+- **Filtros** (botón arriba a la derecha): tipo, rango de años, país, idioma y género. Recalculan la frase
+  principal, KPIs, estados, gráficos, títulos y decisiones; la línea bajo la frase resume los filtros activos y,
+  cuando hay filtros, aparece el botón **Quitar filtros**. El filtro de país destaca en vez de
+  recortar los rankings por país. K2 no se evalúa con filtro de país (mide justamente la mezcla de países) y el
+  dashboard lo explica. Un botón reinicia los filtros.
+- **Mismas escalas y colores en todas las pantallas:** todo porcentaje va de 0 a 100%; azul = película,
+  naranjo rayado = serie, verde con ✓ = supera la meta, gris = contexto, tinta = énfasis (EE.UU.); verde, ámbar y
+  rojo con ícono solo para el estado de un KPI. Barras para comparar magnitudes, líneas solo para el tiempo y
+  dispersión solo para relaciones (vista técnica).
 
 ## Entregables
 
-- `entregables/Infografia_Mercados_StreamView.pdf`, la infografía de una página sobre el hallazgo de
-  mercados, pensada para el Directorio y la Gerencia de Contenidos y Adquisición: el ranking de
-  películas bien evaluadas por país, la evidencia de robustez y tres recomendaciones.
-- `entregables/Informe_Ejecutivo_EP3_StreamView_Analytics.pdf`, el informe ejecutivo de la Etapa 3,
-  cubre problema de negocio, objetivos, audiencia, fuentes de datos e integración, análisis
-  exploratorio, justificación de representaciones gráficas, storytelling, diseño del dashboard, KPIs
-  de engagement, experiencia y retención, evaluación crítica con comparación antes y después,
-  conclusiones y recomendaciones, más anexos de reproducibilidad y de robustez del hallazgo de
-  mercados.
-- `entregables/Presentacion_EP4_StreamView_Analytics.pptx`, la presentación ejecutiva y defensa
-  técnica, con notas de orador: problema, datos, hallazgo, robustez, recomendaciones, navegación del
-  dashboard, herramientas, antes y después, limitaciones y anexos de respaldo.
-- `entregables/Informe_Ejecutivo_EV1_StreamView_Analytics.pdf` y
-  `entregables/Presentacion_EV1_StreamView_Analytics.pptx`, el informe y la presentación de la
-  Etapa 1, que se conservan como referencia para la comparación antes y después.
+- `entregables/Informe_Ejecutivo_EP5_StreamView_Analytics.pdf`: informe ejecutivo final de la EP5. Fuente:
+  `entregables/fuente/informe_ep5.html`; se regenera con `python entregables/fuente/generar_pdf.py`.
+- `entregables/Presentacion_EP6_StreamView_Analytics.pptx` (y su versión `.pdf`): presentación ejecutiva para la
+  defensa EP6, con notas del orador. Fuente: `entregables/fuente/presentacion_ep6.js` (pptxgenjs).
+- `docs/Guia_Defensa_EP6.md`: guion de la demostración y preguntas cruzadas por indicador de la rúbrica.
+- `entregables/Infografia_Mercados_StreamView.pdf`, informe EP3, presentaciones EP4 y EV1: etapas anteriores,
+  que se conservan como referencia del antes/después.
