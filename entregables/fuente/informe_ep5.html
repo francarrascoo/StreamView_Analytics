@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Informe ejecutivo final EP5 · StreamView Analytics</title>
+<style>
+@page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+:root { --ink:#24292f; --muted:#57606a; --line:#d0d7de; --soft:#f6f8fa; --ok:#1a7f37; --warn:#9a6700; --bad:#cf222e; --blue:#2a78d6; --orange:#c85526; }
+* { box-sizing: border-box; }
+body { font-family: "Source Sans 3", "Source Sans Pro", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); font-size: 10.2pt; line-height: 1.42; margin: 0; }
+h1 { font-size: 26pt; line-height: 1.1; margin: 0 0 6mm 0; }
+h2 { font-size: 15pt; margin: 0 0 3mm 0; padding-top: 1mm; border-bottom: 2px solid var(--ink); padding-bottom: 1.5mm; break-after: avoid; }
+h3 { font-size: 11.8pt; margin: 4.5mm 0 1.5mm 0; break-after: avoid; }
+p { margin: 0 0 2.6mm 0; }
+.muted { color: var(--muted); }
+.small { font-size: 9pt; }
+section { break-before: auto; margin-top: 8mm; }
+section.pb { break-before: page; margin-top: 0; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 3.5mm 0; font-size: 8.9pt; break-inside: auto; }
+th, td { border: 1px solid var(--line); padding: 1.4mm 1.8mm; vertical-align: top; text-align: left; }
+th { background: var(--soft); font-weight: 700; }
+tr { break-inside: avoid; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+figure { margin: 2.5mm 0 4mm 0; break-inside: avoid; }
+figure img { max-width: 100%; max-height: 118mm; width: auto; border: 1px solid var(--line); border-radius: 3px; display: block; margin: 0 auto; }
+figcaption { font-size: 8.8pt; color: var(--muted); margin-top: 1.2mm; }
+.estado { font-weight: 700; white-space: nowrap; }
+.ok { color: var(--ok); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+.box { border: 1px solid var(--line); border-left: 4px solid var(--ink); border-radius: 3px; padding: 2.6mm 3.4mm; margin: 2.5mm 0 3.5mm 0; break-inside: avoid; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5mm; margin: 2mm 0 3mm 0; }
+.kpi { border: 1px solid var(--line); border-top: 4px solid; border-radius: 3px; padding: 2mm 2.6mm; break-inside: avoid; }
+.kpi b.v { font-size: 16pt; display: block; line-height: 1.1; }
+.kpi .estado { display: block; font-size: 8.8pt; margin-bottom: .5mm; }
+.kpi .n { font-size: 8.4pt; color: var(--muted); }
+ul, ol { margin: 0 0 2.6mm 0; padding-left: 5mm; }
+li { margin-bottom: 1mm; }
+.cover { height: 255mm; display: flex; flex-direction: column; justify-content: space-between; }
+.cover .top { border-top: 8px solid var(--ink); padding-top: 8mm; }
+.tag { display:inline-block; border:1.5px solid var(--ink); border-radius: 999px; padding: .5mm 3mm; font-size: 9pt; font-weight: 700; margin-right: 2mm; }
+.toc li { margin-bottom: .6mm; }
+code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 8.6pt; background: var(--soft); padding: 0 1mm; border-radius: 2px; }
+.matrix { break-inside: avoid; display:grid; grid-template-columns: 22mm 1fr 1fr; grid-template-rows: auto 1fr 1fr; gap: 1.5mm; font-size: 8.8pt; }
+.matrix div { border:1px solid var(--line); border-radius:3px; padding: 2mm; }
+.matrix .h { border: none; font-weight: 700; text-align: center; padding: 1mm; }
+.matrix .q1 { background:#eaf5ee; } .matrix .q2 { background:#f6f8fa; } .matrix .q3 { background:#fbf6e9; } .matrix .q4 { background:#fdf0f0; }
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="cover">
+  <div class="top">
+    <p class="muted" style="font-size:11pt;margin-bottom:10mm">ADY1104 Visualización de Datos · Duoc UC · Evaluación Parcial EP5</p>
+    <h1>StreamView Analytics<br>Informe ejecutivo final</h1>
+    <p style="font-size:14pt;max-width:150mm">Revisión crítica y optimización de la solución de visualización del catálogo:
+      de métricas descriptivas a KPIs con meta que orientan decisiones de adquisición, promoción e inversión.</p>
+    <p style="margin-top:8mm"><span class="tag">Dashboard optimizado</span><span class="tag">3 KPIs con meta</span><span class="tag">43 mejoras documentadas</span></p>
+  </div>
+  <div>
+    <table style="width:120mm;font-size:10pt">
+      <tr><th style="width:38mm">Equipo consultor</th><td>Felipe Ahumada Silva · Francisca Carrasco Lozano</td></tr>
+      <tr><th>Cliente</th><td>StreamView Analytics: Directorio, Gerencia General y gerencias de Contenidos y Adquisición, Marketing y Producto, y el equipo Data &amp; Analytics</td></tr>
+      <tr><th>Versión evaluada</th><td>EP4 (commit <code>221f72f</code>) → EP5 optimizada</td></tr>
+      <tr><th>Fecha</th><td>Noviembre de 2026</td></tr>
+      <tr><th>Repositorio</th><td>github.com/francarrascoo/StreamView_Analytics</td></tr>
+    </table>
+    <p class="small muted">Contenido: 1. Resumen ejecutivo · 2. Problema de negocio y audiencia · 3. Fuentes de datos y calidad ·
+      4. KPIs · 5. Hallazgos centrales · 6. Revisión crítica de la versión inicial · 7. Justificación de las representaciones ·
+      8. Diagnóstico de legibilidad, accesibilidad y jerarquía · 9. Mejoras implementadas (antes/después) ·
+      10. Limitaciones pendientes · 11. Conclusiones, recomendaciones e impacto esperado · Anexo: reproducibilidad.</p>
+  </div>
+</div>
+
+<!-- 1. RESUMEN EJECUTIVO -->
+<section class="pb">
+<h2>1. Resumen ejecutivo</h2>
+<p><b>Qué se pidió.</b> StreamView Analytics necesita decidir qué contenido adquirir, qué promover y dónde invertir, con
+información consistente entre áreas. En EP5 auditamos la solución de visualización entregada en EP4 y la optimizamos.</p>
+<p><b>Principal debilidad corregida.</b> La versión EP4 presentaba <b>métricas como si fueran KPIs</b>: cifras como
+"26% de películas bien evaluadas" o "Japón, mercado mejor evaluado" sin una meta contra la cual juzgarlas, sin plazo y
+sin responsable. Una cifra sin meta describe, pero no dice si hay que actuar. Definimos <b>3 KPIs</b>, uno por cada
+decisión central del caso (qué cine adquirir, de qué mercados y si el público participa con las series), cada uno con meta
+a diciembre de 2026, umbral de alerta, responsable y la decisión que gatilla. La rentabilidad y la calidad de los datos se
+muestran como evidencia que respalda esas decisiones, no como KPIs. Además, rediseñamos el tablero con los
+principios de <i>Storytelling with Data</i>: cada vista cabe en una pantalla, abre con una frase que dice la conclusión
+y responde cada pregunta con un solo gráfico, con las mismas escalas y colores en todas las pantallas. Finalmente lo
+revisamos con las <i>Human Interface Guidelines</i> de Apple: sigue el modo claro u oscuro del sistema, usa controles
+segmentados y describe cada gráfico en texto para lectores de pantalla.</p>
+
+<div class="kpis">
+  <div class="kpi" style="border-top-color:var(--warn)"><span class="estado warn">! En riesgo</span><b>K1 Películas bien evaluadas</b><b class="v">25,8%</b><span class="n">meta ≥ 30% · Contenidos y Adquisición</span></div>
+  <div class="kpi" style="border-top-color:var(--bad)"><span class="estado bad">✕ No cumple</span><b>K2 Mercados de alto desempeño</b><b class="v">13,5%</b><span class="n">meta ≥ 18% · Contenidos y Adquisición</span></div>
+  <div class="kpi" style="border-top-color:var(--bad)"><span class="estado bad">✕ No cumple</span><b>K3 Series que el público califica</b><b class="v">38,4%</b><span class="n">meta ≥ 50% · Producto con Marketing</span></div>
+</div>
+
+<h3>Hallazgos que orientan la decisión</h3>
+<ol>
+  <li><b>La calidad del cine está en mercados que casi no compramos.</b> En Japón, Corea del Sur y México entre 43% y 51% de
+    las películas está bien evaluada, frente a 23% en EE.UU. Sin embargo, EE.UU. aporta el 50% de las películas y esos tres
+    países solo el 13,5%.</li>
+  <li><b>La mitad de los géneros ya cumple la meta de calidad.</b> 9 de 18 géneros superan el 30% (Documental 64%, Animación
+    53%, Música 53%); Terror (7%) y Suspenso (13%) arrastran el promedio.</li>
+  <li><b>El público participa poco en series.</b> Solo 38% de las series tiene al menos 10 votos (meta: 50%). Conversación
+    (14%), Reality (23%) y Documental (28%) son los géneros más bajos, y 4.501 series con público aún no tienen 10 votos.</li>
+  <li><b>Invertir en calidad rinde.</b> Las películas bien evaluadas recuperan su presupuesto el 77% de las veces, frente a
+    58% de las demás; las de Japón, Corea del Sur y México lo recuperan tanto como las de EE.UU. (70% frente a 66%).</li>
+  <li><b>Las metas son alcanzables.</b> Las películas de 2019-2021 ya superaron el 30% en K1, las de 2020 llegaron a 19% en
+    K2 y las series de 2024 llegan a 49,7% en K3.</li>
+</ol>
+<h3>Recomendaciones</h3>
+<ol>
+  <li><b>Contenidos y Adquisición:</b> reservar una cuota de las nuevas licencias de cine para Japón, Corea del Sur y México
+    (hasta llegar al 18% de K2) y priorizar Animación, Documental y Música (K1).</li>
+  <li><b>Producto y Marketing:</b> pedir calificación al terminar un episodio y destacar las series con público que aún no
+    tienen votos, empezando por Conversación, Reality y Documental (K3).</li>
+  <li><b>Gerencia General y Data &amp; Analytics:</b> usar la nota y el mercado (K1 y K2) como criterio antes de aprobar
+    inversiones altas, y completar presupuesto e ingresos en cada renovación de licencia.</li>
+</ol>
+<div class="box"><b>Cómo se verifica el impacto.</b> El dashboard recalcula los 3 KPIs en cada extracción trimestral del
+catálogo. Cada recomendación tiene un KPI responsable, una meta y un plazo (sección 11): el Directorio sabrá en
+cada revisión si la decisión está moviendo el indicador.</div>
+</section>
+
+<!-- 2. PROBLEMA Y AUDIENCIA -->
+<section>
+<h2>2. Problema de negocio y audiencia</h2>
+<p>StreamView Analytics es una plataforma de streaming por suscripción para Latinoamérica. Su catálogo creció, pero cada
+área usa reportes construidos con criterios distintos: hay múltiples versiones de un mismo indicador, las adquisiciones se
+deciden con información parcial y es difícil comparar países o identificar qué promover (problemas 1 a 7 del caso). La
+Gerencia General solicitó una solución de Visual Analytics que transforme el catálogo en decisiones.</p>
+<p>La solución responde a cuatro audiencias. Cada una toma decisiones distintas, por eso tiene su propia vista en el dashboard:</p>
+<table>
+  <tr><th style="width:24%">Audiencia</th><th style="width:30%">Decisión que toma</th><th style="width:28%">Vista del dashboard</th><th>KPIs</th></tr>
+  <tr><td><b>Directorio y Gerencia General</b> (ejecutiva, poco tiempo)</td><td>Dónde invertir; si la estrategia de catálogo va bien</td><td>Directorio: Resumen, Avance hacia la meta, Catálogo, Rentabilidad</td><td>K1, K2 y K3</td></tr>
+  <tr><td><b>Gerencia de Contenidos y Adquisición</b> (analítica)</td><td>Qué mercados y géneros adquirir; qué licencias renovar</td><td>Contenidos y Adquisición: Mercados, Géneros, Directores y actores <i>(nuevo en EP5)</i></td><td>K1, K2</td></tr>
+  <tr><td><b>Gerencia de Marketing</b> (y Producto)</td><td>Dónde pedir calificaciones; qué contenidos promover</td><td>Marketing: Participación, Qué promover, Segmentos</td><td>K3</td></tr>
+  <tr><td><b>Equipo Data &amp; Analytics</b> (técnica)</td><td>Si las cifras son confiables antes de publicarlas</td><td>Data &amp; Analytics: KPIs y calidad de datos, Catálogo, Popularidad y nota, Tendencia, Finanzas</td><td>K1, K2 y K3 + ficha</td></tr>
+</table>
+<p>El objetivo de negocio que ordena toda la solución: <b>subir la calidad del catálogo y lograr que el público
+participe</b>. Los tres KPIs se derivan de ese objetivo: cuánta calidad se adquiere (K1), de qué mercados viene (K2) y
+cuánto participa el público con las series (K3). La rentabilidad respalda a K1 y K2 como evidencia.</p>
+<p class="muted small">Sobre retención: el caso menciona retención, engagement y experiencia. Los datos entregados no
+contienen reproducciones, suscripciones ni usuarios, así que la retención no se puede medir. El engagement se aproxima con
+la participación del público en TMDB (K3), y así se rotula en el dashboard (ver limitaciones, sección 10).</p>
+
+<h2 style="margin-top:7mm">3. Fuentes de datos y calidad</h2>
+<p>Dos datasets oficiales del caso, sin modificar: <b>Netflix Movies Detailed up to 2025</b> (16.000 películas, 18 variables)
+y <b>Netflix TV Shows Detailed up to 2025</b> (16.000 filas, 16 variables; 15.991 series únicas tras eliminar 9 duplicados
+por <code>show_id</code>). Son metadatos de TMDB de estrenos 2010-2025 y se integran en una tabla de <b>31.991 títulos</b>
+con una columna de formato. La integración estandariza géneros (por ejemplo, "Action &amp; Adventure" pasa a Acción y
+Aventura), trata "Unknown" como faltante y unifica los dos códigos del chino mandarín (82 idiomas).</p>
+<table style="break-inside:avoid">
+  <tr><th style="width:30%">Regla de calidad</th><th style="width:36%">Por qué</th><th>KPIs afectados</th></tr>
+  <tr><td>Calificación solo con <b>10 o más votos</b></td><td>14% de los títulos no tiene votos y su calificación viene en 0, que no es una nota real</td><td>K1 (K3 mide justamente esta cobertura)</td></tr>
+  <tr><td>Comparar país, idioma y género <b>dentro de un formato</b></td><td>Las series tienen el triple de popularidad típica (36,2 frente a 10,9): mezclarlas produce una paradoja de Simpson</td><td>Rankings de K1 por país y género</td></tr>
+  <tr><td>Finanzas solo con montos <b>≥ US$10.000</b> y retorno <b>≤ 50 veces</b></td><td>Hay presupuestos de US$1 o US$5. Quedan 3.468 películas (21,7%)</td><td>Evidencia de rentabilidad</td></tr>
+  <tr><td>Popularidad con <b>mediana</b>; categorías con <b>≥ 200 títulos</b>; 2025 fuera de las tendencias</td><td>Valores extremos; rankings con pocos casos; menos del 10% de los títulos de 2025 tiene votos suficientes</td><td>Rankings, listas de Marketing y trayectorias</td></tr>
+</table>
+<p>La limpieza vive en un solo módulo (<code>dashboard/streamview/datos.py</code>) que usan el dashboard y el notebook, para que
+no existan "múltiples versiones de un mismo indicador" (problema 1 del caso). La auditoría completa está en la Sección 2
+del notebook.</p>
+</section>
+
+<!-- 4. KPIs -->
+<section>
+<h2>4. KPIs: de métricas a indicadores con meta</h2>
+<p><b>Métrica</b> es una medida que describe ("25,8% de las películas está bien evaluada"). <b>KPI</b> es una métrica
+elegida porque mide el avance hacia un objetivo de negocio y que se compara contra una <b>meta</b>, con <b>plazo</b>,
+<b>responsable</b> y una <b>decisión</b> asociada: "K1 = 25,8% frente a una meta de 30% a diciembre de 2026 → en riesgo →
+la Gerencia de Contenidos prioriza adquisiciones en géneros y mercados que superan el 30%".</p>
+<p>Las cifras de catálogo que el caso lista como "KPIs" (total de títulos, países, idiomas, presupuesto total) se
+mantienen en el dashboard, pero rotuladas como <b>métricas de contexto (sin meta)</b>: describen el catálogo, no miden un
+objetivo.</p>
+
+<h3>Cómo se fijaron las metas</h3>
+<p>StreamView no entrega metas, así que son <b>supuestos del caso definidos por el equipo</b>. Para que no sean arbitrarias,
+cada meta cumple dos condiciones: (1) es mejor que la línea base actual, así que exige un cambio; y (2) <b>ya la alcanzó
+alguna cohorte de estreno</b> del mismo catálogo, o la tendencia reciente la está alcanzando, así que es realista. Plazo:
+diciembre de 2026 (proyecto Visual Analytics 2026). Medición trimestral sobre cada extracción del catálogo.</p>
+<p><b>Regla de estado, igual para los tres:</b> <span class="estado ok">✓ cumple</span> si alcanza la meta;
+<span class="estado warn">! en riesgo</span> si queda hasta 15% (relativo) bajo la meta;
+<span class="estado bad">✕ no cumple</span> si queda más abajo. El estado se comunica con ícono, palabra y color.</p>
+
+<table>
+  <tr><th style="width:17%">KPI</th><th style="width:22%">Fórmula</th><th class="num">Base</th><th class="num">Meta</th><th style="width:12%">Estado</th><th style="width:13%">Responsable</th><th>Por qué esa meta</th></tr>
+  <tr><td><b>K1</b> Películas bien evaluadas</td><td>Películas con calificación ≥ 7 / películas con 10+ votos</td><td class="num">25,8%</td><td class="num">≥ 30%</td><td class="estado warn">! En riesgo</td><td>Contenidos y Adquisición</td><td>Las cohortes 2019-2021 llegaron a 31-32%. +4,2 pp ≈ 600 películas bien evaluadas más</td></tr>
+  <tr><td><b>K2</b> Películas de mercados de alto desempeño</td><td>Películas de Japón, Corea del Sur o México / películas con país</td><td class="num">13,5%</td><td class="num">≥ 18%</td><td class="estado bad">✕ No cumple</td><td>Contenidos y Adquisición</td><td>Duplican la calidad de EE.UU. (hallazgo robusto). La cohorte 2020 llegó a 19%</td></tr>
+  <tr><td><b>K3</b> Series que el público califica</td><td>Series con 10+ votos / series</td><td class="num">38,4%</td><td class="num">≥ 50%</td><td class="estado bad">✕ No cumple</td><td>Producto (con Marketing)</td><td>Mejor indicador de engagement disponible. La cohorte 2024 llega a 49,7%</td></tr>
+</table>
+<p class="small muted">La línea base de cada KPI se verifica automáticamente contra los datos con <code>dashboard/tests/test_kpis.py</code>.
+Cada tarjeta del dashboard indica sobre cuántos títulos se calcula (base n).</p>
+<p><b>Por qué tres y no más.</b> Una versión intermedia tuvo seis KPIs. Dejamos solo los tres que corresponden a
+decisiones centrales del caso y que se pueden medir en todo el catálogo. La <b>rentabilidad</b> se calcula solo sobre el
+21,7% de las películas que tiene datos financieros confiables (sobre todo grandes estudios), así que se usa como
+<b>evidencia</b> de que la calidad rinde (sección 5, H4), no como meta. La <b>cobertura financiera</b> pasó a ser una métrica
+de calidad de datos en la vista técnica, y la <b>visibilidad</b> de los títulos queda como contexto exploratorio.</p>
+<figure><img src="../evidencias/figuras/f3_trayectorias.png" alt="Trayectoria de K1, K2 y K3 por año de estreno contra su meta">
+<figcaption>Figura 1. Trayectoria de los tres KPIs por año de estreno contra la meta (línea punteada), en la misma escala
+de 0 a 100%. Los puntos verdes son los años que superaron la meta: K1 en 2019-2021 y K2 en 2020; K3 llega a 49,7% en
+2024.</figcaption></figure>
+</section>
+
+<!-- 5. HALLAZGOS -->
+<section>
+<h2>5. Hallazgos centrales</h2>
+<p>Cada hallazgo responde las cuatro preguntas del storytelling del caso (qué ocurre, por qué, qué evidencia lo demuestra y
+qué decidir) y está conectado con un KPI.</p>
+
+<h3>H1. La calidad del cine está en mercados que casi no compramos (K1, K2)</h3>
+<p><b>Qué ocurre:</b> en Japón (51%), Corea del Sur (47%) y México (43%) la proporción de películas bien evaluadas
+duplica la de EE.UU. (23%), que aporta el 50% de las películas del catálogo. Los tres mercados suman solo 13,5% (K2).
+<b>Evidencia:</b> la ventaja se mantiene con tres métodos (comparación directa, mismo género y año, y promedio bayesiano
+con controles; Sección 4.11 del notebook) y con bases de 236 a 871 películas calificadas por país. <b>Por qué ocurre:</b> lo
+que se exporta de estos mercados es una selección de su producción, mientras que de EE.UU. se adquiere volumen. <b>Qué
+decidir:</b> subir K2 a 18% con una cuota de adquisición, con un piloto que verifique que las nuevas compras mantienen la
+calidad (ver riesgos).</p>
+<figure><img src="../evidencias/figuras/f2_mercados.png" alt="Porcentaje de películas bien evaluadas por país con la meta de K1" style="max-height:85mm">
+<figcaption>Figura 2. Películas bien evaluadas por país (países con al menos 200 películas calificadas), con la meta de K1
+como referencia. ★ = mercados de K2. Vista: Directorio y Contenidos y Adquisición.</figcaption></figure>
+
+<h3>H2. La mitad de los géneros ya cumple la meta de calidad (K1)</h3>
+<p><b>Qué ocurre:</b> 9 de 18 géneros superan el 30% de películas bien evaluadas. Documental (64%), Animación (53%) y Música
+(53%) lideran; Terror (7%), Suspenso (13%) y Misterio (19%) quedan muy por debajo. <b>Qué decidir:</b> la meta de K1 no se
+alcanza solo con mercados. Si K2 llega a 18% con las tasas actuales, K1 sube cerca de 1,2 pp; los otros 3 pp requieren
+cambiar la mezcla de géneros de las nuevas adquisiciones. Animación es el género más completo: en el catálogo cumple
+los tres KPIs.</p>
+<figure><img src="../evidencias/figuras/f4_k1_generos.png" alt="K1 por género contra la meta" style="max-height:100mm">
+<figcaption>Figura 3. K1 por género (películas), con la meta y el estado de cada barra (ícono + color). Vista: Contenidos y Adquisición.</figcaption></figure>
+
+<h3>H3. El público participa poco en series (K3)</h3>
+<p><b>Qué ocurre:</b> solo 38,4% de las series tiene al menos 10 votos, frente a 88,6% de las películas, aunque la
+participación sube año a año (30% en 2010, 49,7% en 2024). La brecha se concentra en algunos géneros: Conversación (14%),
+Reality (23%) y Documental (28%) quedan muy abajo, mientras Fantasía y Ciencia ficción llegan a 69%; 8 de 16 géneros
+cumplen la meta. <b>Por qué importa:</b> sin votos no se puede saber si una serie gusta ni si conviene renovarla.
+<b>Evidencia:</b> 4.501 series tienen público (popularidad sobre la típica de las series) y aún no llegan a 10 votos;
+cerrar la brecha de K3 equivale a unas 1.850 series más con votos suficientes. <b>Qué decidir:</b> Producto incorpora
+una solicitud de calificación al terminar un episodio y Marketing destaca las series con público sin votos, empezando
+por Conversación, Reality y Documental.</p>
+<div class="grid2">
+<figure><img src="../evidencias/figuras/f9_k3_generos.png" alt="K3 por género de series contra la meta"><figcaption>Figura 4. K3 por género, contra la meta de 50%. Vista: Marketing, Participación.</figcaption></figure>
+<figure><img src="../evidencias/figuras/f5_series_sin_votos.png" alt="Tabla de series con público que aún no tienen 10 votos"><figcaption>Figura 5. Series con público que aún no tienen 10 votos: lista accionable para Producto y Marketing (palanca de K3).</figcaption></figure>
+</div>
+
+<h3>H4. Invertir en calidad rinde, y los mercados de K2 no sacrifican rentabilidad (evidencia de K1 y K2)</h3>
+<p><b>Qué ocurre:</b> la proporción de películas que recauda en taquilla al menos su presupuesto sube con la nota: 42% con
+nota bajo 5, 62% entre 6 y 7, y 89% con 8 o más. Las bien evaluadas lo recuperan el 77% de las veces, frente a 58% de
+las demás. Las películas de Japón, Corea del Sur y México lo recuperan el 70% de las veces, frente a 66% en EE.UU.
+<b>Advertencia:</b> solo 21,7% de las películas tiene datos financieros válidos, sobre todo grandes estudios, y solo 179
+son de los tres mercados de K2: no afirmamos que rindan más, sino que la cuota de K2 no sacrifica rentabilidad. Por eso
+la rentabilidad es evidencia y no un KPI. <b>Qué decidir:</b> usar K1 y K2 como criterio antes de aprobar inversiones
+altas, y completar los datos financieros en cada renovación para que la evidencia represente a todo el catálogo.</p>
+<div class="grid2">
+<figure><img src="../evidencias/figuras/f6_rentabilidad_nota.png" alt="Películas que recuperan su presupuesto según su nota"><figcaption>Figura 6. Películas que recuperan su presupuesto, según su nota. Vista: Directorio, Rentabilidad.</figcaption></figure>
+<figure><img src="../evidencias/figuras/f14_rentabilidad_mercado.png" alt="Películas que recuperan su presupuesto por mercado"><figcaption>Figura 7. Recuperación del presupuesto por mercado: los de K2 no rinden menos que EE.UU.</figcaption></figure>
+</div>
+<p class="small muted">Además, el catálogo es una muestra curada (1.000 películas y 1.000 series por año de estreno), por lo que
+no permite medir crecimiento. Por eso las trayectorias se leen por cohorte de estreno, no como evolución del catálogo.</p>
+</section>
+
+<!-- 6. REVISIÓN CRÍTICA -->
+<section>
+<h2>6. Revisión crítica de la versión inicial (EP4)</h2>
+<h3>Diagnóstico inicial</h3>
+<p>La versión EP4 tenía un propósito claro (vista por perfil para Directorio, Marketing y Data &amp; Analytics), un hallazgo
+central robusto (mercados) y reglas de calidad de datos bien fundamentadas. Pero no permitía responder la pregunta que
+el Directorio necesita: <b>¿vamos bien o mal, y quién debe actuar?</b></p>
+<table>
+  <tr><th style="width:24%">Aspecto</th><th style="width:38%">Fortalezas de EP4 (se mantienen)</th><th>Limitaciones y riesgos detectados en EP4</th></tr>
+  <tr><td>KPIs</td><td>Cálculos correctos y coherentes con el notebook</td><td><b>Métricas presentadas como KPIs</b>: sin meta, plazo, responsable ni decisión. "Japón" o "Título más popular" no son indicadores. Riesgo: el Directorio no sabe si una cifra es buena o mala</td></tr>
+  <tr><td>Audiencia</td><td>Tres perfiles con vistas explicativas y exploratorias</td><td>Faltaba el <b>dashboard analítico para la Gerencia de Contenidos</b> que pide el caso; las preguntas de directores y actores no se respondían</td></tr>
+  <tr><td>Análisis</td><td>Reglas contra sesgos (10+ votos, comparación dentro de formato, finanzas válidas, mínimos por categoría)</td><td>Rankings sin referencia: no se sabía qué valor era "suficiente". No se veía si el catálogo se acercaba o alejaba de un objetivo</td></tr>
+  <tr><td>Diseño</td><td>Títulos que dicen la conclusión; gris para el contexto y color para el mensaje</td><td>Texto secundario con contraste 3,6:1 (bajo AA); tipografía monoespaciada; color primario rojo que compite con el rojo semántico; formatos distinguidos solo por color</td></tr>
+  <tr><td>Interacción</td><td>Filtros que recalculan títulos; el filtro de país destaca en vez de recortar</td><td>Los filtros no tenían un objetivo contra el cual comparar el segmento; no había leyenda de cómo leer los indicadores</td></tr>
+  <tr><td>Consistencia</td><td>Misma limpieza en notebook y dashboard (copiada)</td><td>Lógica duplicada en dos lugares (riesgo de "múltiples versiones de un indicador"); el naranjo de las series era distinto en el notebook y en el dashboard</td></tr>
+</table>
+<h3>Riesgos de interpretación y sesgos identificados</h3>
+<ul>
+  <li><b>Escalas:</b> la popularidad es un índice relativo de actividad en TMDB, no reproducciones (regla de negocio 5). Se
+    rotula "índice TMDB" en cada eje y se usa la mediana.</li>
+  <li><b>Segmentación:</b> mezclar películas y series premia a los segmentos con más series (paradoja de Simpson); por eso
+    los rankings se hacen dentro de un formato.</li>
+  <li><b>Filtros:</b> un filtro de país que recorta el ranking compara al país solo con sus coproductores; se mantiene el
+    diseño de "destacar en vez de recortar", y K2 no se evalúa con filtro de país.</li>
+  <li><b>Métricas:</b> la calificación con 0 votos (vale 0) y los presupuestos de US$1 distorsionan promedios; se excluyen
+    con reglas explícitas.</li>
+  <li><b>Calidad de fuentes:</b> cobertura desigual (38% de series calificadas, 21,7% de películas con finanzas), que queda a la vista: K3 mide la participación en series y la cobertura financiera se muestra como métrica de
+    calidad de datos.</li>
+</ul>
+</section>
+
+<!-- 7. JUSTIFICACIÓN -->
+<section>
+<h2>7. Justificación de las representaciones visuales</h2>
+<p>Cada gráfico se eligió según el tipo de variable, la pregunta, la audiencia y el riesgo de distorsión, y se compararon
+alternativas. Seguimos los principios de <i>Storytelling with Data</i> (Knaflic): barras para comparar magnitudes,
+siempre desde cero; líneas solo para el tiempo; dispersión solo para relaciones; nada en 3D, sin tortas ni doble eje.
+Todo porcentaje se muestra en la misma escala de 0 a 100% en todas las pantallas, como recomiendan las <i>Human
+Interface Guidelines</i> de Apple para rangos cuyos límites tienen sentido (su ejemplo es la carga de una batería, de
+0% a 100%).</p>
+<table>
+  <tr><th style="width:15%">Representación</th><th style="width:17%">Variables y escala</th><th style="width:17%">Objetivo y audiencia</th><th style="width:22%">Por qué esta</th><th style="width:16%">Alternativas descartadas</th><th>Cuidado contra distorsión</th></tr>
+  <tr><td><b>Tarjeta KPI con gráfico de bala</b></td><td>Proporción (0-100%) frente a meta y umbral</td><td>¿Cumplimos? · Directorio y todas las gerencias</td><td>Muestra valor, meta, brecha y rangos cualitativos en poco espacio (S. Few)</td><td>Velocímetro (ángulos difíciles de comparar, mucho espacio); semáforo solo de color (no muestra brecha ni es accesible)</td><td>Escala desde 0; meta como marca vertical; estado con ícono + texto</td></tr>
+  <tr><td><b>Barras horizontales ordenadas con línea de meta</b> (país, género, K3 por género)</td><td>Categórica nominal (16-18 categorías, nombres largos) × proporción</td><td>Ranking contra la meta de K1 o K3 · Contenidos, Directorio y Marketing</td><td>La longitud es el canal más preciso para comparar magnitudes; horizontal = etiquetas legibles</td><td>Mapa coroplético (el área del país distorsiona: EE.UU. domina visualmente; no ordena); torta (no compara 16 partes); barras verticales (etiquetas rotadas)</td><td>Eje en cero; mínimo de 200 películas por país; n en el tooltip</td></tr>
+  <tr><td><b>Línea de KPI por año con meta</b></td><td>Año de estreno (temporal) × proporción</td><td>¿La meta es realista? ¿Hacia dónde vamos? · Directorio</td><td>La línea muestra cambio y pendiente en el tiempo</td><td>Barras por año (sugieren totales, más tinta); área (sugiere acumulación)</td><td>Misma escala de 0 a 100% en las tres trayectorias y en todo el tablero; valor del último año escrito; puntos verdes en los años que superaron la meta</td></tr>
+  <tr><td><b>Columnas por tramo de nota</b> (rentabilidad)</td><td>Nota agrupada en 5 tramos ordenados × proporción que recupera su presupuesto</td><td>¿Invertir en calidad rinde? · Directorio</td><td>Tramos con significado que entiende una audiencia no técnica; la subida de izquierda a derecha es el mensaje</td><td>Dispersión ROI-nota (cola larga ilegible, requiere formación estadística); histograma de ROI (no responde la pregunta)</td><td>Escala de 0 a 100%; tramos cerrados; cobertura de 21,7% escrita en la tarjeta</td></tr>
+  <tr><td><b>Tablas de series sin votos y de películas a destacar</b></td><td>Títulos con votos, popularidad y nota</td><td>¿Dónde pedir calificaciones y qué promover? · Marketing</td><td>La tarea es buscar nombres y valores exactos, no comparar magnitudes</td><td>Dispersión (útil para explorar, no para elegir títulos)</td><td>Películas con al menos 200 votos para no promover calificaciones frágiles</td></tr>
+  <tr><td><b>Dispersión popularidad-calificación (log)</b></td><td>Dos variables continuas; popularidad muy asimétrica</td><td>¿Hay relación? · Data &amp; Analytics</td><td>Muestra forma y dispersión de la relación, no solo un coeficiente</td><td>Solo el coeficiente (oculta la forma); escala lineal (aplasta el 95% de los puntos)</td><td>Escala log rotulada; muestra aleatoria fija; forma + color por formato</td></tr>
+  <tr><td><b>Barras agrupadas por idioma y formato</b></td><td>Conteo por idioma (categórica) × formato</td><td>Composición del catálogo · Data &amp; Analytics</td><td>Compara longitudes con la misma base; se lee el idioma y el formato a la vez</td><td><b>Treemap</b> (lo pedía el caso; obliga a comparar áreas, que se leen peor que longitudes)</td><td>Barras desde cero; valor escrito en cada barra</td></tr>
+  <tr><td><b>Barras apiladas por año</b></td><td>Conteo por año y formato</td><td>¿Creció el catálogo? · Data &amp; Analytics</td><td>Muestra el total y la composición de cada año; revela que el catálogo trae siempre 1.000 + 1.000 títulos</td><td><b>Áreas apiladas</b> (lo pedía el caso; sugieren continuidad y acumulación, y las capas superiores no parten de una base común)</td><td>Barras desde cero; colores de formato</td></tr>
+  <tr><td><b>Barras de directores y actores</b></td><td>Conteo por persona</td><td>Pregunta de Producción del caso · Contenidos</td><td>Ranking simple de frecuencias</td><td>Nube de palabras (no permite comparar)</td><td>Formato predominante escrito en la barra; nota sobre series sin director</td></tr>
+</table>
+<p>El caso pide barras, líneas, áreas, dispersión, treemap y KPIs. Barras, líneas, dispersión y KPIs están presentes. El
+<b>treemap</b> y las <b>áreas</b> estuvieron en la versión EP4 y se reemplazaron de forma deliberada por barras: comparar
+áreas es menos preciso que comparar longitudes, y la regla de diseño del tablero es usar barras para comparar
+magnitudes. Los <b>mapas</b> se descartaron por la distorsión de área descrita arriba y porque el hallazgo es un ranking,
+no un patrón geográfico.</p>
+
+<h2 style="margin-top:6mm">8. Diagnóstico de legibilidad, accesibilidad y jerarquía</h2>
+<table>
+  <tr><th style="width:18%">Criterio</th><th style="width:31%">Antes (EP4)</th><th style="width:31%">Después (EP5)</th><th>Referencia</th></tr>
+  <tr><td>Contraste del texto secundario</td><td>#8a8878 sobre blanco: <b>3,58:1</b> (no cumple AA)</td><td>#4a525c: <b>7,92:1</b> (cumple AA y el 7:1 que Apple recomienda para texto chico)</td><td>WCAG 1.4.3; Apple HIG</td></tr>
+  <tr><td>Contraste de los estados</td><td>No existían</td><td>Verde 5,08:1 · ámbar 4,87:1 · rojo 5,36:1 (AA)</td><td>WCAG 1.4.3</td></tr>
+  <tr><td>Uso del color</td><td>Película/serie y "destacado" solo por color</td><td>Ícono + texto + color en estados; ✓ en las barras que superan la meta; rayado en las series y línea punteada con cuadrados; un color, un significado en todas las pantallas</td><td>WCAG 1.4.1</td></tr>
+  <tr><td>Tipografía</td><td>Cifras en monoespaciada; etiquetas de 0,74 rem</td><td>Sans serif con números tabulares; etiquetas de 0,85-0,92 rem; ejes de 14 px</td><td>Legibilidad</td></tr>
+  <tr><td>Unidades y etiquetas</td><td>"Popularidad típica" sin escala; montos sin unidad en algunos ejes</td><td>"índice TMDB", "escala 0 a 10", "millones US$", "veces"; coma decimal en todo</td><td>Regla de negocio 7</td></tr>
+  <tr><td>Jerarquía</td><td>Dos filas de cifras con el mismo peso, antes de cualquier mensaje; filtros en la esquina superior izquierda</td><td>Frase con la conclusión arriba a la izquierda → estado de los KPIs → una tarjeta por pregunta (pregunta, respuesta, gráfico); filtros en un botón</td><td>SWD: posición y Big Idea; lectura en "Z"</td></tr>
+  <tr><td>Lectura de un vistazo</td><td>Páginas de hasta 5.200 px que exigían scroll</td><td>Las 15 pestañas caben en una pantalla de 1440 × 900 (medido)</td><td>SWD: carga cognitiva</td></tr>
+  <tr><td>Lenguaje y cifras</td><td>"pp", "cohorte", "mediana", "n=", filas de métricas sin mensaje</td><td>Lenguaje llano ("puntos", "estrenos de cada año"); tarjeta KPI con valor, estado y meta; cifras redondeadas y coherentes</td><td>SWD: eliminar el desorden</td></tr>
+  <tr><td>Escalas</td><td>Cada gráfico con su propia escala</td><td>Todo porcentaje de 0 a 100%; películas y series en la misma escala de popularidad</td><td>Consistencia; Apple HIG, <i>Charts</i></td></tr>
+  <tr><td>Modo oscuro</td><td>Solo modo claro, forzado</td><td>Sigue la apariencia del sistema; paleta oscura con contraste de 5,6:1 a 16:1</td><td>Apple HIG, <i>Dark Mode</i></td></tr>
+  <tr><td>Lectores de pantalla</td><td>Gráficos sin descripción</td><td>Resumen en texto de cada gráfico: tipo, escala y valores</td><td>Apple HIG, <i>Charts</i>; WCAG 1.1.1</td></tr>
+  <tr><td>Controles</td><td>Botones de opción para elegir vista y orden</td><td>Controles segmentados con estado visible y descripción emergente; botón "Quitar filtros" a la vista</td><td>Apple HIG, <i>Segmented controls</i>, <i>Feedback</i></td></tr>
+  <tr><td>Preferencias del sistema</td><td>No se consideraban</td><td>Respeta "reducir movimiento" y "aumentar contraste"; fuente del sistema</td><td>Apple HIG, <i>Accessibility</i>, <i>Typography</i></td></tr>
+  <tr><td>Color decorativo</td><td>Rojo de Streamlit en pestañas, radio y slider</td><td>Primario neutro #24292f: el rojo solo significa "no cumple"</td><td>Color con significado</td></tr>
+  <tr><td>Orientación del usuario</td><td>Filtros activos sin resumen junto al contenido</td><td>Línea de alcance bajo la conclusión, botón "Filtros (n)" y leyenda de estados bajo los KPIs</td><td>Heurísticas de Nielsen</td></tr>
+</table>
+</section>
+
+<!-- 9. MEJORAS -->
+<section>
+<h2>9. Mejoras implementadas: evidencia antes/después</h2>
+<p>Se implementaron 43 mejoras. El registro completo, con problema, mejora, fundamento, resultado esperado y archivo de
+evidencia, está en <code>entregables/evidencias/registro_cambios.md</code>. Las principales:</p>
+<figure><img src="../evidencias/comparativas/c1_kpis.png" alt="Antes y después de los KPIs" style="max-height:105mm">
+<figcaption>Figura 8. <b>Problema:</b> métricas presentadas como KPIs, sin meta ni responsable. <b>Mejora:</b> 3 KPIs con meta,
+estado accesible, gráfico de bala, responsable, plazo y decisiones. <b>Fundamento:</b> un KPI mide avance hacia un objetivo;
+sin meta no orienta decisiones. <b>Resultado esperado:</b> el Directorio identifica en segundos qué está en riesgo y quién actúa.</figcaption></figure>
+<figure><img src="../evidencias/comparativas/c2_mercados_meta.png" alt="Antes y después del gráfico de mercados">
+<figcaption>Figura 9. <b>Problema:</b> el ranking no indicaba qué valor era suficiente. <b>Mejora:</b> línea de meta de K1, verde solo para los
+países que la superan (el mismo verde de "cumple" en todo el tablero) y ★ en los mercados de K2. <b>Fundamento:</b> una referencia convierte la comparación entre barras en una comparación contra el objetivo.
+<b>Resultado:</b> se lee que 4 de 16 países superan la meta y EE.UU. no.</figcaption></figure>
+<div class="grid2">
+<figure><img src="../evidencias/comparativas/c3_top10_formato.png" alt="Antes y después del top 10">
+<figcaption>Figura 10. Formato escrito en cada barra (antes: solo color). Fundamento: WCAG 1.4.1.</figcaption></figure>
+<figure><img src="../evidencias/comparativas/c4_metricas_no_kpis.png" alt="Antes y después de los indicadores de Marketing">
+<figcaption>Figura 11. Marketing: "Título más popular" y "Género más popular" (métricas) se reemplazan por K3 con meta, su brecha por género y la lista de series sin votos.</figcaption></figure>
+</div>
+<table>
+  <tr><th style="width:4%">#</th><th style="width:30%">Problema</th><th style="width:36%">Mejora</th><th>Fundamento</th></tr>
+  <tr><td>7</td><td>Faltaba el dashboard analítico de Contenidos</td><td>Perfil Contenidos y Adquisición (Mercados, Géneros, Directores y actores)</td><td>Diseño por audiencia; requisito del caso</td></tr>
+  <tr><td>9</td><td>No había vista para decidir qué géneros adquirir</td><td>K1 por género contra la meta, con estado por barra</td><td>Comparación contra objetivo</td></tr>
+  <tr><td>10</td><td>No se sabía si las metas eran realistas</td><td>Trayectoria de cada KPI por año, con meta y alerta</td><td>Línea para cambio temporal</td></tr>
+  <tr><td>11</td><td>Preguntas del caso sin responder (directores, actores)</td><td>Sección Directores y actores</td><td>Cobertura de las preguntas de negocio</td></tr>
+  <tr><td>12</td><td>Marketing sin lista accionable</td><td>Tablas de series con público sin votos (palanca de K3) y de películas bien evaluadas de los mercados de K2</td><td>Tabla para búsqueda de valores exactos</td></tr>
+  <tr><td>6</td><td>Lógica duplicada entre notebook y dashboard</td><td>Módulo único <code>dashboard/streamview</code> + prueba automática</td><td>Una sola fuente de verdad</td></tr>
+  <tr><td>15-21</td><td>Contraste, tipografía, color exclusivo, unidades, rótulos superpuestos</td><td>Ver sección 8</td><td>WCAG 2.1 AA</td></tr>
+  <tr><td>23-32</td><td>Páginas largas, filtros arriba a la izquierda, sin conclusión explícita, varios gráficos por sección, jerga, treemap y áreas, escalas y colores distintos entre pantallas</td><td>Rediseño con <i>Storytelling with Data</i>: una pantalla por pestaña, frase con la conclusión arriba a la izquierda, una tarjeta por pregunta, lenguaje llano, solo barras para magnitudes, escalas de 0 a 100% y un significado por color</td><td>SWD caps. 1 a 5 y reglas de diseño del equipo</td></tr>
+  <tr><td>33-42</td><td>Solo modo claro, botones de opción, gráficos sin descripción para lectores de pantalla, distinciones solo por color, "nosotros" en los textos</td><td>Revisión con las <i>Human Interface Guidelines</i> de Apple: modo claro u oscuro según el sistema, controles segmentados, resumen accesible de cada gráfico, ✓ y rayado además del color, textos sin "nosotros" y estados vacíos con siguiente paso</td><td>Apple HIG: Dark Mode, Charts, Color, Segmented controls, Writing, Accessibility</td></tr>
+  <tr><td>43</td><td>Seis KPIs dispersaban la atención; tres dependían de datos parciales o no correspondían a decisiones centrales</td><td>Foco en K1, K2 y K3; pestaña Rentabilidad como evidencia de K1 y K2; Marketing centrado en la participación (K3)</td><td>SWD: pocos indicadores, cada uno ligado a una decisión; Apple HIG: <i>keep focused</i></td></tr>
+</table>
+<h3>Optimización funcional y verificación técnica</h3>
+<p>Comprobamos que los KPIs, filtros, interacciones y navegación entreguen información consistente:</p>
+<ul>
+  <li><b>Prueba automática</b> (<code>python dashboard/tests/test_kpis.py</code>): 5 pruebas aprobadas. Verifican los 31.991 títulos,
+    que cada línea base coincida con los datos, la coherencia entre meta y alerta, los estados y que los filtros recalculen.</li>
+  <li><b>Escenarios con filtros</b> (<code>entregables/evidencias/escenarios/</code>). Género Terror: K1 cae a 6,8% (no cumple). Documental: K1
+    64,3% (cumple) y K2 4,0% (no cumple). Japón: K1 51,0% y K3 63,3% cumplen, y K2 muestra "sin datos" con el motivo.
+    Series en coreano: K3 44,4% (en riesgo) y 414 series con público sin votos. Animación: cumple los tres KPIs. Los títulos, estados y decisiones cambian con el segmento.</li>
+  <li><b>Apertura y estabilidad:</b> el dashboard abre sin errores; las 20 capturas automatizadas (15 vistas + 5 escenarios)
+    corrieron sin excepciones en el registro del servidor.</li>
+  <li><b>Coherencia entre productos:</b> notebook, dashboard e informe usan los mismos módulos y entregan las mismas cifras.</li>
+</ul>
+</section>
+
+<!-- 10. LIMITACIONES -->
+<section>
+<h2>10. Limitaciones pendientes, sesgos y riesgos</h2>
+<table>
+  <tr><th style="width:20%">Limitación o sesgo</th><th style="width:30%">Consecuencia en la interpretación</th><th style="width:30%">Mitigación aplicada</th><th>Pendiente</th></tr>
+  <tr><td><b>Sin datos de consumo</b> (reproducciones, suscripciones, usuarios)</td><td>No se puede medir retención; K3 es una aproximación de engagement con datos de TMDB, no de la plataforma</td><td>Rotulado explícito en el dashboard y el informe</td><td>KPI de retención con datos propios (mejora M5)</td></tr>
+  <tr><td><b>Sesgo de selección en la calificación</b></td><td>K1 describe solo películas con 10+ votos; en series, solo el 38% tiene votos suficientes</td><td>Base n visible en cada tarjeta; K3 mide justamente esa cobertura</td><td>—</td></tr>
+  <tr><td><b>Causalidad no demostrada</b> en mercados</td><td>Que Japón tenga mejores calificaciones no garantiza que comprar más películas japonesas suba K1: lo que se exporta ya es una selección</td><td>Hallazgo validado con 3 métodos y controles por género y año</td><td>Piloto de adquisición con seguimiento por cohorte (R1)</td></tr>
+  <tr><td><b>Sesgo financiero</b></td><td>La evidencia de rentabilidad describe sobre todo a grandes estudios (21,7% de cobertura)</td><td>No se usa como KPI; aviso de cobertura en cada tarjeta de rentabilidad</td><td>Completar datos (R3)</td></tr>
+  <tr><td><b>Popularidad como foto del momento</b></td><td>El índice TMDB favorece lo reciente o en tendencia; las listas de Marketing pueden variar entre extracciones</td><td>Mediana; referencia fija por formato; comparación dentro de formato</td><td>Promediar varias extracciones</td></tr>
+  <tr><td><b>Catálogo curado</b> (1.000 + 1.000 por año) y fecha de incorporación igual al estreno</td><td>No se puede medir crecimiento ni "incorporaciones por año" del caso</td><td>Trayectorias por cohorte de estreno, rotuladas como tales</td><td>Fecha real de incorporación (M8)</td></tr>
+  <tr><td><b>Metas definidas por el equipo</b></td><td>Podrían estar mal calibradas para el negocio real</td><td>Basadas en línea base y cohortes que ya las alcanzaron; justificación visible</td><td>Validarlas con cada responsable (M1)</td></tr>
+  <tr><td><b>Umbral de alerta uniforme</b> (15%)</td><td>K2 varía más que K1 entre años (de 19% a 10%); el mismo umbral puede generar falsas alarmas</td><td>Regla única y explicable</td><td>Umbral según volatilidad (M6)</td></tr>
+  <tr><td><b>Clasificación etaria inutilizable</b></td><td>La columna <code>rating</code> trae la calificación numérica; los KPIs de clasificación del caso no son calculables</td><td>Documentado en la Sección 2.2 del notebook</td><td>Solicitar el dato a la fuente</td></tr>
+  <tr><td><b>Coproducciones</b></td><td>Un título suma en cada país; las participaciones por país suman más de 100%</td><td>Rotulado en cada gráfico de países</td><td>—</td></tr>
+  <tr><td><b>Escala común de 0 a 100%</b></td><td>Cambios de pocos puntos (K1 pasa de 20% a 32%) se ven más planos que con un eje ajustado al dato</td><td>Es una decisión deliberada para no exagerar diferencias; el título de cada tarjeta escribe la cifra y los años sobre la meta van en verde</td><td>—</td></tr>
+  <tr><td><b>Gris de contexto</b> (#c9c7bf, 1,69:1)</td><td>Las barras de contexto tienen bajo contraste con el fondo</td><td>El valor está escrito en cada barra, así que el dato no depende del gris</td><td>Borde más oscuro en las barras grises</td></tr>
+  <tr><td><b>Despliegue local</b></td><td>El dashboard corre localmente, sin control de acceso por perfil</td><td>Instalación reproducible documentada</td><td>Despliegue corporativo (M4)</td></tr>
+</table>
+<div style="break-inside: avoid"><h3>Oportunidades de mejora priorizadas por impacto y esfuerzo</h3>
+<div class="matrix">
+  <div class="h"></div><div class="h">Esfuerzo bajo</div><div class="h">Esfuerzo alto</div>
+  <div class="h" style="writing-mode:vertical-rl;transform:rotate(180deg)">Impacto alto</div>
+  <div class="q1"><b>1. Hacer ahora</b><br>M1 Validar metas y umbrales con cada responsable (taller de 1 h)<br>M2 Exportar la lista de series con público sin votos a CSV para Marketing<br>M7 Prueba de usabilidad con 5 usuarios por perfil (tiempo para responder cada pregunta)</div>
+  <div class="q3"><b>2. Planificar</b><br>M5 KPIs de retención y engagement reales (reproducciones, horas vistas, churn)<br>M8 Fecha real de incorporación para medir adquisiciones por cohorte<br>M4 Despliegue corporativo con acceso por perfil</div>
+  <div class="h" style="writing-mode:vertical-rl;transform:rotate(180deg)">Impacto medio</div>
+  <div class="q2"><b>3. Mejoras rápidas</b><br>M6 Umbral de alerta según la volatilidad de cada KPI<br>M9 Borde en barras grises y revisión automática de accesibilidad</div>
+  <div class="q4"><b>4. Evaluar después</b><br>M3 Alertas automáticas por correo cuando un KPI cambia de estado</div>
+</div>
+<p class="small muted" style="margin-top:2mm">Criterio: impacto = cuánto mejora una decisión de negocio o cierra una brecha de los KPIs;
+esfuerzo = tiempo y datos nuevos que requiere. M1 va primero porque todas las decisiones dependen de que las metas sean aceptadas.</p></div>
+</section>
+
+<!-- 11. CONCLUSIONES -->
+<section>
+<h2>11. Conclusiones, recomendaciones e impacto esperado</h2>
+<p><b>Conclusión.</b> La solución optimizada pasa de describir el catálogo a <b>medir el avance hacia objetivos de negocio</b>.
+Hoy ningún KPI cumple su meta (K1 en riesgo; K2 y K3 no cumplen), pero K1 y K2 ya alcanzaron su meta en alguna
+cohorte y K3 llega a 49,7% en los estrenos de 2024: el problema no es de capacidad, sino de dónde se adquiere y de pedir
+la participación del público. El dashboard entrega a
+cada gerencia su KPI, su brecha y su lista de acciones, con filtros para encontrar los segmentos que ya cumplen.</p>
+<table>
+  <tr><th style="width:15%">Recomendación</th><th style="width:17%">Hallazgo que la sustenta</th><th style="width:12%">KPI</th><th style="width:20%">Decisión concreta y responsable</th><th style="width:19%">Impacto esperado</th><th>Cómo se verifica</th></tr>
+  <tr><td><b>R1</b> Reorientar la adquisición de cine</td><td>H1, H2: Japón, Corea del Sur y México duplican la calidad de EE.UU.; 9 géneros ya cumplen la meta</td><td>K1 (25,8% → 30%) y K2 (13,5% → 18%)</td><td><b>Contenidos y Adquisición</b>: cuota de licencias para los 3 mercados; priorizar Animación, Documental y Música; no renovar películas bajo 5,0</td><td>K2 en meta aporta ~1,2 pp a K1; la mezcla de géneros aporta el resto (~3 pp ≈ 600 películas bien evaluadas)</td><td>Trimestral en el dashboard; comparar la calidad de las adquisiciones nuevas contra la línea base (piloto por cohorte)</td></tr>
+  <tr><td><b>R2</b> Pedir calificación y destacar series sin votos</td><td>H3: solo 38% de las series tiene 10+ votos; 4.501 series con público sin votos; Conversación, Reality y Documental bajo 30%</td><td>K3 (38,4% → 50%)</td><td><b>Producto</b>: solicitud de calificación al terminar un episodio. <b>Marketing</b>: destacar las series de la lista del dashboard, empezando por esos géneros</td><td>~1.850 series más con votos suficientes, lo que mejora las decisiones de renovación</td><td>K3 trimestral; proporción de series de la lista que pasan a 10+ votos</td></tr>
+  <tr><td><b>R3</b> Invertir con evidencia y completar los datos</td><td>H4: las bien evaluadas recuperan su presupuesto 77% frente a 58%; los mercados de K2, 70% frente a 66% en EE.UU.; solo 21,7% con datos</td><td>K1 y K2 como criterio de inversión</td><td><b>Gerencia General</b>: exigir nota y mercado del segmento antes de aprobar presupuestos altos. <b>Data &amp; Analytics</b>: pedir presupuesto e ingresos en cada renovación</td><td>Menos películas que no recuperan la inversión; evidencia financiera representativa</td><td>Tasa de recuperación de las compras nuevas por cohorte; cobertura financiera trimestral</td></tr>
+</table>
+<div class="box"><b>Valor para la toma de decisiones.</b> <b>Para quién:</b> Directorio y cuatro gerencias. <b>En qué decisión:</b>
+adquisición y renovación de licencias, foco de campañas, diseño del producto y aprobación de inversiones. <b>Cómo se
+verifica:</b> el mismo dashboard recalcula los KPIs en cada extracción trimestral; si una recomendación funciona, su KPI
+se acerca a la meta y cambia de estado (✕ → ! → ✓). Si en dos trimestres no se mueve, la decisión se revisa.</div>
+<p>Con esto, la solución responde las preguntas estratégicas del caso: qué contenido priorizar (Animación, Documental y
+Música en cine; series con buena calificación), qué países representan oportunidades (Japón, Corea del Sur y México) y qué
+promover (series con público que aún no tienen votos y películas bien evaluadas de esos tres mercados). Además, deja a la vista con qué confianza se puede afirmar cada cosa.</p>
+
+<h2 style="margin-top:6mm">Anexo. Reproducibilidad</h2>
+<p>El repositorio contiene todo lo necesario para reproducir la solución sin información externa:</p>
+<table>
+  <tr><th style="width:30%">Elemento</th><th>Ubicación y uso</th></tr>
+  <tr><td>Datos</td><td><code>data/</code>: los dos CSV oficiales, sin modificar</td></tr>
+  <tr><td>Limpieza y KPIs (fuente única)</td><td><code>dashboard/streamview/datos.py</code>, <code>dashboard/streamview/kpis.py</code></td></tr>
+  <tr><td>Dashboard</td><td><code>pip install -r dashboard/requirements.txt</code> y <code>streamlit run dashboard/app.py</code></td></tr>
+  <tr><td>Notebook</td><td><code>notebooks/analisis_exploratorio.ipynb</code> (auditoría, métricas, KPIs y 17 visualizaciones en <code>images/</code>)</td></tr>
+  <tr><td>Verificación técnica</td><td><code>python dashboard/tests/test_kpis.py</code></td></tr>
+  <tr><td>Evidencias antes/después</td><td><code>entregables/evidencias/</code>: <code>antes/</code>, <code>despues/</code>, <code>comparativas/</code>, <code>escenarios/</code>, <code>figuras/</code> y <code>registro_cambios.md</code>. Se regeneran con los scripts de <code>entregables/fuente/</code></td></tr>
+  <tr><td>Este informe</td><td><code>entregables/fuente/informe_ep5.html</code>; PDF con <code>python entregables/fuente/generar_pdf.py</code></td></tr>
+</table>
+<p class="small muted">Entorno probado: Python 3.9.6, streamlit 1.50.0, pandas 2.3.3, plotly 7.1.0.</p>
+</section>
+</body>
+</html>
